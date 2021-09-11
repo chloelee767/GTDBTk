@@ -12,6 +12,11 @@ ARG VER
 # --------------------- INSTALL HMMER, PYTHON3, FASTTREE---------------------- #
 # ---------------------------------------------------------------------------- #
 RUN apt-get update -y -m && \
+    # adds add-apt-repository command
+    DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y software-properties-common && \
+    add-apt-repository -y ppa:deadsnakes/ppa && \ # python ppa
+
+    apt-get update -y -m && \
     DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
                                                wget \
                                                libgomp1 \
@@ -19,10 +24,16 @@ RUN apt-get update -y -m && \
                                                prodigal=1:2.6.2-2 \
                                                fasttree=2.1.8-2 \
                                                unzip \
-                                               python3.5 \
-                                               python3-pip \
+                                               python3.8 \
                                                python3-setuptools \
-                                               python3-wheel && \
+                                               python3-wheel \
+    # Fix ImportError: cannot import name 'sysconfig' from 'distutils' (/usr/lib/python3.8/distutils/__init__.py)
+                                               python3.8-distutils && \
+
+    # Fix AttributeError: module 'platform' has no attribute 'linux_distribution'
+    # python3.8 -m easy_install pip && \
+    wget https://bootstrap.pypa.io/get-pip.py && \
+    python3.8 get-pip.py && \
 
     # install mash
     wget https://github.com/marbl/Mash/releases/download/v2.0/mash-Linux64-v2.0.tar && \
@@ -38,8 +49,8 @@ RUN apt-get update -y -m && \
 # ---------------------------------------------------------------------------- #
 # ------------------------------ ALIAS PYTHON3  ------------------------------ #
 # ---------------------------------------------------------------------------- #
-RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.5 1 && \
-    update-alternatives --set python /usr/bin/python3.5
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.8 1 && \
+    update-alternatives --set python /usr/bin/python3.8
 
 # ---------------------------------------------------------------------------- #
 # ----------------------------- INSTALL PPLACER ------------------------------ #
