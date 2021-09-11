@@ -1,4 +1,5 @@
 # docker build --build-arg VER=1.6.0 --no-cache -t lee0767/gtdbtk-ubuntu16:1.6.0 .
+# singularity build gtdbtk-ubuntu16_1.6.0.sif docker-daemon://lee0767/gtdbtk-ubuntu16:1.6.0
 
 # How to build and deploy the Docker image:
 # docker build --build-arg VER=1.2.3 --no-cache -t ecogenomic/gtdbtk:latest -t ecogenomic/gtdbtk:1.2.3 .
@@ -11,6 +12,7 @@ ARG VER
 # ---------------------------------------------------------------------------- #
 # --------------------- INSTALL HMMER, PYTHON3, FASTTREE---------------------- #
 # ---------------------------------------------------------------------------- #
+# TODO remove software-properities-common after installing python?
 RUN apt-get update -y -m && \
     # adds add-apt-repository command
     DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y software-properties-common && \
