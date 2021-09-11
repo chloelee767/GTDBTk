@@ -1,8 +1,10 @@
+# docker build --build-arg VER=1.6.0 --no-cache -t lee0767/gtdbtk-ubuntu16:1.6.0 .
+
 # How to build and deploy the Docker image:
 # docker build --build-arg VER=1.2.3 --no-cache -t ecogenomic/gtdbtk:latest -t ecogenomic/gtdbtk:1.2.3 .
 # docker push ecogenomic/gtdbtk:latest && sudo docker push ecogenomic/gtdbtk:1.2.3
 
-FROM ubuntu:18.04
+FROM ubuntu:16.04
 
 ARG VER
 
@@ -13,15 +15,21 @@ RUN apt-get update -y -m && \
     DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
                                                wget \
                                                libgomp1 \
-                                               hmmer=3.1b2+dfsg-5ubuntu1 \
-                                               mash=2.0-2 \
-                                               prodigal=1:2.6.3-1 \
-                                               fasttree=2.1.10-1 \
+                                               hmmer=3.1b2-2 \
+                                               prodigal=1:2.6.2-2 \
+                                               fasttree=2.1.8-2 \
                                                unzip \
-                                               python3.8 \
+                                               python3.5 \
                                                python3-pip \
                                                python3-setuptools \
                                                python3-wheel && \
+
+    # install mash
+    wget https://github.com/marbl/Mash/releases/download/v2.0/mash-Linux64-v2.0.tar && \
+    tar xf mash-Linux64-v2.0.tar && \
+    mv mash-Linux64-v2.0/mash /usr/bin && \
+    rm -r mash-Linux64-v2.0.tar mash-Linux64-v2.0 && \
+
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     ln -s /usr/bin/fasttree /usr/bin/FastTree && \
@@ -30,8 +38,8 @@ RUN apt-get update -y -m && \
 # ---------------------------------------------------------------------------- #
 # ------------------------------ ALIAS PYTHON3  ------------------------------ #
 # ---------------------------------------------------------------------------- #
-RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.8 1 && \
-    update-alternatives --set python /usr/bin/python3.8
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.5 1 && \
+    update-alternatives --set python /usr/bin/python3.5
 
 # ---------------------------------------------------------------------------- #
 # ----------------------------- INSTALL PPLACER ------------------------------ #
